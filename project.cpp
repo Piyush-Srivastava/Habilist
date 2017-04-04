@@ -1,10 +1,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
+
 #include <cstring>
 // #include <sqlite>
 
 using namespace std;
+int count = 0;
 
 class Habit{
     protected:
@@ -21,11 +23,12 @@ class Habit{
         time_=t;
     }
     friend void new_task();
-    friend void insert(Habit);
+    friend void edit_task();
+   void insert();
     
 };
 
-class ToDo{
+class ToDo:public Habit{
     string task;
     int time_;
     
@@ -41,11 +44,12 @@ class ToDo{
     }
     
     friend void new_task();
-    
+    void insert();
 };
 
 void new_task(){
     Habit h1;
+ 
     ToDo d1;
     cout<<"Select the type of task:\n ";
     cout<<"1.Habit\n 2.To-Do\n";
@@ -62,7 +66,7 @@ void new_task(){
                 cin>>time_;
                 // ofstream habits("habits.txt");
                 h1.get_habit(task,time_);
-                insert(h1);
+                h1.insert();
                 break;
         
         case 2: cout<<"Enter the task:\n";
@@ -81,20 +85,68 @@ void new_task(){
     
 }
 
-void insert(Habit H){
-    ofstream habits("habits.txt");
-    habits<< H.task<<' '<<H.time_;
+void Habit::insert(){
+    count++;
     
+    ofstream habits;
+    habits.open("habits.txt",ios::app);
+    habits<<count <<' '<< task<<' '<<time_<<endl;
     
+    habits.close();
     
 }
+
+void edit_task()
+{
+    Habit h;
+    ToDo d;
+    int s_no;
+    int id;
+    string task;
+    string newtask;
+    int time;
+    int newtime;
+    
+    fstream habits;
+    habits.open("habits.txt",ios::in|ios::out);
+    cout<<"Enter the task no. you wish to edit:\n";
+    cin>>id;
+    
+    while(habits >> s_no >> task >>time)
+    {
+        int totallength = 1+task.length()+2+2; //use to move fptr back to replace the line
+        if(id==s_no){
+            cout<< s_no <<' '<< task <<' '<<time<<endl;
+            cout<<"Is this the task you want to edit(y/n):\n";
+            char ch;
+            cin>>ch;
+            if(ch=='y')
+            {   
+                habits.seekg(-totallength,ios::cur);
+                cout<<"Enter the new task:\n";
+                cin>>newtask;
+                cout<<"Enter the new deadline:\n";
+                cin>>newtime;
+                
+                habits << s_no <<' '<< newtask <<' '<<newtime<<endl;
+            }
+            
+        }
+        else{
+            cout<<"Task not found\n";
+        }
+        
+       
+        }
+    }
+
 
 
 int main()
 {   
     system("cls");
     system("title Habilist");
-    // ofstreams habits("habits.txt");
+    
     
     cout<<"       Welcome to the Habilist       \n";
     while(1){
@@ -108,7 +160,7 @@ int main()
     {
         case 1: new_task();break;
                 
-        // case 2: void edit_task();break;
+        case 2: edit_task();break;
         
         // case 3: void delete_task();break:
         
