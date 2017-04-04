@@ -6,7 +6,7 @@
 // #include <sqlite>
 
 using namespace std;
-int count = 0;
+int count = 0; //to keep the count of no. of tasks
 
 class Habit{
     protected:
@@ -85,11 +85,11 @@ void new_task(){
     
 }
 
-void Habit::insert(){
+void Habit::insert(){  
     count++;
     
-    ofstream habits;
-    habits.open("habits.txt",ios::app);
+    ofstream habits; 
+    habits.open("habits.txt",ios::app); //to append in the habits file
     habits<<count <<' '<< task<<' '<<time_<<endl;
     
     habits.close();
@@ -109,18 +109,18 @@ void edit_task()
     int flag=0;
     
     fstream habits;
-    habits.open("habits.txt",ios::in|ios::out);
+    habits.open("habits.txt",ios::in|ios::out); 
     cout<<"Enter the task no. you wish to edit:\n";
     cin>>id;
     
-    ofstream temp;
+    ofstream temp; //temporary file to write the data of habits.txt excluding the line to be edited
     temp.open("temp.txt",ios::out);
     
-    while(habits >> s_no >> task >>time)
+    while(habits >> s_no >> task >>time) //read from habits.txt line by line
     {
             
             if(id!=s_no){
-                temp<< s_no<<' '<<task<<' '<<time<<endl;
+                temp<< s_no<<' '<<task<<' '<<time<<endl; //write the data to temp file
                 
             }
             
@@ -137,31 +137,30 @@ void edit_task()
                 cout<<"Enter the new deadline:\n";
                 cin>>newtime;
                 
-                temp << s_no <<' '<< newtask <<' '<<newtime<<endl;
+                temp << s_no <<' '<< newtask <<' '<<newtime<<endl; //write the new task to temp file
             }
             
         }
         
-        if(flag==0)
+       
+    }
+        
+         if(flag==0) //id not found
         {
             cout<<"Task not found\n";
         }
-        
-        
-       
-        }
         temp.close();
         habits.close();
-        remove("habits.txt");
-        rename("temp.txt","habits.txt");
+        remove("habits.txt"); //remove habits.txt
+        rename("temp.txt","habits.txt"); //rename temp.txt to habits.txt
     }
 
 
 
 int main()
 {   
-    system("cls");
-    system("title Habilist");
+    system("cls"); //to clear the output screen
+    system("title Habilist"); //to display the name of the program at the top
     
     
     cout<<"       Welcome to the Habilist       \n";
