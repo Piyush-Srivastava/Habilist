@@ -106,38 +106,54 @@ void edit_task()
     string newtask;
     int time;
     int newtime;
+    int flag=0;
     
     fstream habits;
     habits.open("habits.txt",ios::in|ios::out);
     cout<<"Enter the task no. you wish to edit:\n";
     cin>>id;
     
+    ofstream temp;
+    temp.open("temp.txt",ios::out);
+    
     while(habits >> s_no >> task >>time)
     {
-        int totallength = 1+task.length()+2+2; //use to move fptr back to replace the line
-        if(id==s_no){
-            cout<< s_no <<' '<< task <<' '<<time<<endl;
+            
+            if(id!=s_no){
+                temp<< s_no<<' '<<task<<' '<<time<<endl;
+                
+            }
+            
+            else if(id==s_no){
+                flag=1;
+            cout<<s_no<<' '<<task<<' '<<time<<endl;
             cout<<"Is this the task you want to edit(y/n):\n";
             char ch;
             cin>>ch;
             if(ch=='y')
             {   
-                habits.seekg(-totallength,ios::cur);
                 cout<<"Enter the new task:\n";
                 cin>>newtask;
                 cout<<"Enter the new deadline:\n";
                 cin>>newtime;
                 
-                habits << s_no <<' '<< newtask <<' '<<newtime<<endl;
+                temp << s_no <<' '<< newtask <<' '<<newtime<<endl;
             }
             
         }
-        else{
+        
+        if(flag==0)
+        {
             cout<<"Task not found\n";
         }
         
+        
        
         }
+        temp.close();
+        habits.close();
+        remove("habits.txt");
+        rename("temp.txt","habits.txt");
     }
 
 
