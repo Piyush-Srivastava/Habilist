@@ -4,10 +4,12 @@
 #include <iomanip>
 #include <cstring>
 #include <istream>
+// #include <chrono>
+#include <time.h>
 // #include <sqlite>
 
 using namespace std;
-int count = 1; //to keep the count of no. of tasks
+
 
 class Habit{
     protected:
@@ -26,6 +28,7 @@ class Habit{
     friend void new_task();
     friend void edit_task();
     friend void display_task();
+    friend void delete_task();
    void insert();
     
 };
@@ -91,7 +94,7 @@ void Habit::insert(){
     int s_no;
     ifstream habits("habits.txt");;
     string line;
-    
+    int count=1;
     while(getline(habits,line)){
         count++; //to read no. of lines for s.no.
     }
@@ -179,6 +182,78 @@ void display_task(){
 }
 
 
+void delete_task()
+{
+    Habit h;
+    ToDo d;
+    int s_no;
+    int id;
+    int time_;
+    string task;
+    int flag=0;
+    
+    time_t now=time(0);
+    struct tm *now_tm;
+    int hour;
+    int min;
+
+    // now = time(0);
+    now_tm = localtime(&now);
+    hour = now_tm->tm_hour;
+    min = now_tm->tm_min;
+    
+    if(min>30){
+        hour=hour+1;
+    }
+    ifstream habits;
+    habits.open("habits.txt",ios::in|ios::out); 
+    cout<<"Enter the task no. you wish to delete:\n";
+    cin>>id;
+    
+    ofstream temp; //temporary file to write the data of habits.txt excluding the line to be edited
+    temp.open("temp.txt",ios::out);
+    
+    while(habits >> s_no >> task >>time_) //read from habits.txt line by line
+    {
+            
+            if(id!=s_no){
+                temp<< s_no<<' '<<task<<' '<<time_<<endl; //write the data to temp file
+                
+            }
+            
+            else if(id==s_no){
+                flag=1;
+            cout<<s_no<<' '<<task<<' '<<time_<<endl;
+            cout<<"Is this the task you want to delete(y/n):\n";
+            char ch;
+            cin>>ch;
+            if(ch=='y')
+            {   
+               if(time_>hour){
+                   cout<<"Bravo! You finished the task on time\n";
+                   
+               }
+               else{
+                   cout<<"Oops! Looks like you coudn't finish the task on time\n";
+               }
+            }
+            
+        }
+
+       
+    }
+        
+         if(flag==0) //id not found
+        {
+            cout<<"Task not found\n";
+        }
+        temp.close();
+        habits.close();
+        remove("habits.txt"); //remove habits.txt
+        rename("temp.txt","habits.txt"); //rename temp.txt to habits.txt
+    
+}
+
 
 int main()
 {   
@@ -200,7 +275,7 @@ int main()
                 
         case 2: edit_task();break;
         
-        // case 3: delete_task();break:
+        case 3: delete_task();break;
         
         case 4: display_task();break;
         
