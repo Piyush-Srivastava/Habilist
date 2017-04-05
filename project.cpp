@@ -1,12 +1,13 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
-
+#include <iomanip>
 #include <cstring>
+#include <istream>
 // #include <sqlite>
 
 using namespace std;
-int count = 0; //to keep the count of no. of tasks
+int count = 1; //to keep the count of no. of tasks
 
 class Habit{
     protected:
@@ -24,6 +25,7 @@ class Habit{
     }
     friend void new_task();
     friend void edit_task();
+    friend void display_task();
    void insert();
     
 };
@@ -86,13 +88,20 @@ void new_task(){
 }
 
 void Habit::insert(){  
-    count++;
+    int s_no;
+    ifstream habits("habits.txt");;
+    string line;
     
-    ofstream habits; 
-    habits.open("habits.txt",ios::app); //to append in the habits file
-    habits<<count <<' '<< task<<' '<<time_<<endl;
-    
+    while(getline(habits,line)){
+        count++; //to read no. of lines for s.no.
+    }
     habits.close();
+    
+    ofstream habit;
+    habit.open("habits.txt",ios::app); //to append in the habits file
+    habit<<count <<' '<< task<<' '<<time_<<endl;
+    
+    habit.close();
     
 }
 
@@ -108,7 +117,7 @@ void edit_task()
     int newtime;
     int flag=0;
     
-    fstream habits;
+    ifstream habits;
     habits.open("habits.txt",ios::in|ios::out); 
     cout<<"Enter the task no. you wish to edit:\n";
     cin>>id;
@@ -154,6 +163,20 @@ void edit_task()
         remove("habits.txt"); //remove habits.txt
         rename("temp.txt","habits.txt"); //rename temp.txt to habits.txt
     }
+    
+    
+void display_task(){
+    int s_no;
+    string task;
+    int time;
+    fstream habits;
+    habits.open("habits.txt",ios::in); //read from file
+    cout<<"S.no"<<setw(10)<<"Tasks"<<setw(20)<<"Deadline"<<endl<<endl;
+    while(habits >>s_no >>task >>time){
+        cout<<s_no<<setw(15)<<task<<setw(15)<<time<<endl;
+        
+    }
+}
 
 
 
@@ -177,9 +200,9 @@ int main()
                 
         case 2: edit_task();break;
         
-        // case 3: void delete_task();break:
+        // case 3: delete_task();break:
         
-        // case 4: exit(0);
+        case 4: display_task();break;
         
         default: exit(0);
     }
