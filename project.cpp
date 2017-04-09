@@ -173,12 +173,14 @@ void display_task(){
     string task;
     int time;
     fstream habits;
+    cout<<"_______________________Your Current Tasks_______________________\n";
     habits.open("habits.txt",ios::in); //read from file
-    cout<<"S.no"<<setw(10)<<"Tasks"<<setw(20)<<"Deadline"<<endl<<endl;
+    cout<<"S.no"<<setw(30)<<"Tasks"<<setw(30)<<"Deadline"<<endl<<endl;
     while(habits >>s_no >>task >>time){
-        cout<<s_no<<setw(15)<<task<<setw(15)<<time<<endl;
+        cout<<s_no<<setw(35)<<task<<setw(25)<<time<<":00"<<endl;
         
     }
+    cout<<endl;
 }
 
 
@@ -217,8 +219,11 @@ void delete_task()
     {
             
             if(id!=s_no){
+                if(flag==0)
                 temp<< s_no<<' '<<task<<' '<<time_<<endl; //write the data to temp file
-                
+                else
+                temp<< s_no-1<<' '<<task<<' '<<time_<<endl; //decrement the s.no by one, of the tasks
+                                                            //after the deleted task
             }
             
             else if(id==s_no){
@@ -230,12 +235,13 @@ void delete_task()
             if(ch=='y')
             {   
                if(time_>hour){
-                   cout<<"Bravo! You finished the task on time\n";
+                   cout<<"\nBravo! You finished the task on time\n\n";
                    
                }
                else{
-                   cout<<"Oops! Looks like you coudn't finish the task on time\n";
+                   cout<<"\nOops! Looks like you coudn't finish the task on time\n\n";
                }
+               
             }
             
         }
@@ -261,7 +267,7 @@ int main()
     system("title Habilist"); //to display the name of the program at the top
     
     
-    cout<<"       Welcome to the Habilist       \n";
+    cout<<"*********************** Welcome to the Habilist **********************     \n\n";
     while(1){
     cout<<"Select your choice:\n ";
     cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.Exit\n";
