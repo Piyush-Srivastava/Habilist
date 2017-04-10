@@ -280,14 +280,14 @@ void Habit::delete_task()
 
 void  profile_(string name){ //yet to work
    
-    int t_count;
-    int t_comp;
-    int pts;
+    int t_count=0;
+    int t_comp=0;
+    int pts=0;
     int x=0;
     ofstream profile("profile.txt");
     if(!profile){
         profile.open("profile.txt",ios::out);
-        profile<<name<<x<<x<<x;
+        profile<<name<<" "<<t_count<<" "<<t_comp<<" "<<pts;
         profile.close();
     }
     else{
@@ -296,12 +296,12 @@ void  profile_(string name){ //yet to work
     profile.open("profile.txt",ios::in|ios::out);
     ofstream temp("temp.txt",ios::out);
     
-    profile>>name>>t_count>>t_comp>>pts;
+    profile>>name >>t_count >>t_comp >>pts ;
     task_count+=t_count;
     task_completed+=t_comp;
     points+=pts;
 
-    temp<<name<<task_count<<task_completed<<points;    
+    temp<<name<<" "<<task_count<<" "<<task_completed<<" "<<points;    
     profile.close();
     temp.close();
     
