@@ -30,12 +30,13 @@ class Habit{
         task=a;
         time_=t;
     }
-    friend void new_task();
-    friend void edit_task();
-    friend void display_task();
-    friend void delete_task();
-    friend void profile_();
-   void insert();
+    virtual void new_task();
+    virtual void edit_task();
+    virtual void display_task();
+    virtual void delete_task();
+    virtual  void profile_(string);
+    virtual void insert();
+    virtual void menu(string);
     
 };
 
@@ -54,47 +55,41 @@ class ToDo:public Habit{
         time_=t;
     }
     
-    friend void new_task();
-    void insert();
+    virtual void new_task();
+    virtual void edit_task();
+    virtual void display_task();
+    virtual void delete_task();
+    virtual  void profile_(string);
+    virtual void insert();
+    virtual void menu(string);
 };
 
-void new_task(){
+
+
+////////////////////////////////////// NEW TASK /////////////////////////////////////////////////////
+
+void Habit::new_task(){
     Habit h1;
  
-    ToDo d1;
-    cout<<"Select the type of task:\n ";
-    cout<<"1.Habit\n 2.To-Do\n";
-    int ch;
+  
+
     string task;
     
-    cin>>ch;
+
     int time_;
-    switch(ch)
-    {
-        case 1: cout<<"Enter the task: \n";
-                cin>>task;
-                cout<<"Enter the deadline in hours:\n";
-                cin>>time_;
-                // ofstream habits("habits.txt");
-                h1.get_habit(task,time_);
-                h1.insert();
-                break;
-        
-        case 2: cout<<"Enter the task:\n";
-                cin>>task;
-                cout<<"Enter the deadline in hours:\n";
-                cin>>time_;
-                d1.get_ToDo(task,time_);
-                break;
-        
-        default: cout<<"Invalid option\n";
-        
-                
-                
-                
-    }
-    
+   
+    cout<<"Enter the task: \n";
+    cin>>task;  
+    cout<<"Enter the deadline in hours:\n";
+    cin>>time_;
+    // ofstream habits("habits.txt");
+    h1.get_habit(task,time_);
+    h1.insert();
+  
 }
+
+
+////////////////////////////////////// INSERT TASK /////////////////////////////////////////////////////
 
 void Habit::insert(){  
     int s_no;
@@ -115,7 +110,10 @@ void Habit::insert(){
     
 }
 
-void edit_task()
+
+////////////////////////////////////// EDIT TASK /////////////////////////////////////////////////////
+
+void Habit::edit_task()
 {
     Habit h;
     ToDo d;
@@ -175,7 +173,9 @@ void edit_task()
     }
     
     
-void display_task(){
+////////////////////////////////////// DISPLAY TASK /////////////////////////////////////////////////////
+
+void Habit::display_task(){
     int s_no;
     string task;
     int time;
@@ -190,8 +190,9 @@ void display_task(){
     cout<<endl;
 }
 
+////////////////////////////////////// DELETE TASK /////////////////////////////////////////////////////
 
-void delete_task()
+void Habit::delete_task()
 {
     Habit h;
     ToDo d;
@@ -208,7 +209,7 @@ void delete_task()
 
     // now = time(0);
     now_tm = localtime(&now);
-    hour = now_tm->tm_hour+5;
+    hour = now_tm->tm_hour+5; //to change time from gmt to ist , gmt+5.30=ist
     min = now_tm->tm_min;
     
     
@@ -275,8 +276,9 @@ void delete_task()
     
 }
 
+////////////////////////////////////// PROFILE /////////////////////////////////////////////////////
 
-void profile_(string name){
+void  profile_(string name){ //yet to work
    
     int t_count;
     int t_comp;
@@ -320,11 +322,33 @@ void profile_(string name){
     }
     
     
-    
-    
+}
 
+////////////////////////////////////// MENU /////////////////////////////////////////////////////
+
+void Habit::menu(string name)
+{
+    Habit h1;
+    cout<<"Select your choice:\n ";
+    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile \n 6.Exit\n";
+    int ch2;
+    cin>>ch2;
     
     
+    switch(ch2)
+    {
+        case 1: h1.new_task();break;
+                
+        case 2: h1.edit_task();break;
+        
+        case 3: h1.delete_task();break;
+        
+        case 4: h1.display_task();break;
+        
+        case 5: h1.profile_(name);break;
+        
+        default: exit(0);
+    }
 }
 
 
@@ -332,36 +356,30 @@ int main()
 {   
     system("cls"); //to clear the output screen
     system("title Habilist"); //to display the name of the program at the top
-    
+    Habit hab;
+    // ToDo Todo;
     string name;
     cout<<"*********************** Welcome to the Habilist **********************     \n\n";
     cout<<"Enter your name:\n";
     cin>>name;    
+    
     while(1){
         
-    
-    cout<<"Select your choice:\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile \n 6.Exit\n";
+        
+    cout<<"Select the type of task:\n ";
+    cout<<"1.Habit\n 2.To-Do\n";
     int ch;
-    cin>>ch;
-    
-    
     switch(ch)
     {
-        case 1: new_task();break;
-                
-        case 2: edit_task();break;
+        case 1: hab.menu(name);break;
         
-        case 3: delete_task();break;
+        // case 2: Todo.menu();break;
         
-        case 4: display_task();break;
-        
-        case 5: profile_(name);break;
-        
-        default: exit(0);
     }
     
     
+    
     }
+    return 0;
     
 }
