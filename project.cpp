@@ -10,6 +10,11 @@
 
 using namespace std;
 
+int points=0;
+int task_count=0;
+int task_completed=0;
+// int task_failed=0;
+
 
 class Habit{
     protected:
@@ -29,6 +34,7 @@ class Habit{
     friend void edit_task();
     friend void display_task();
     friend void delete_task();
+    friend void profile_();
    void insert();
     
 };
@@ -104,6 +110,7 @@ void Habit::insert(){
     habit.open("habits.txt",ios::app); //to append in the habits file
     habit<<count <<' '<< task<<' '<<time_<<endl;
     
+    task_count+=1;
     habit.close();
     
 }
@@ -201,12 +208,17 @@ void delete_task()
 
     // now = time(0);
     now_tm = localtime(&now);
-    hour = now_tm->tm_hour;
+    hour = now_tm->tm_hour+5;
     min = now_tm->tm_min;
+    
+    
+    
     
     if(min>30){
         hour=hour+1;
+        min=min%30;
     }
+    cout<<hour<<" "<<min<<endl;
     ifstream habits;
     habits.open("habits.txt",ios::in|ios::out); 
     cout<<"Enter the task no. you wish to delete:\n";
@@ -236,10 +248,13 @@ void delete_task()
             {   
                if(time_>hour){
                    cout<<"\nBravo! You finished the task on time\n\n";
+                   points+=1000;
+                   task_completed+=1;
                    
                }
                else{
                    cout<<"\nOops! Looks like you coudn't finish the task on time\n\n";
+                   points-=200;
                }
                
             }
@@ -261,16 +276,72 @@ void delete_task()
 }
 
 
+void profile_(string name){
+   
+    int t_count;
+    int t_comp;
+    int pts;
+    int x=0;
+    ofstream profile("profile.txt");
+    if(!profile){
+        profile.open("profile.txt",ios::out);
+        profile<<name<<x<<x<<x;
+        profile.close();
+    }
+    else{
+    
+    ifstream profile;
+    profile.open("profile.txt",ios::in|ios::out);
+    ofstream temp("temp.txt",ios::out);
+    
+    profile>>name>>t_count>>t_comp>>pts;
+    task_count+=t_count;
+    task_completed+=t_comp;
+    points+=pts;
+
+    temp<<name<<task_count<<task_completed<<points;    
+    profile.close();
+    temp.close();
+    
+    remove("profile.txt");
+    rename("temp.txt","profile.txt");
+    
+    
+    fstream prof("profile.txt",ios::in);
+    
+    prof>>name>>t_count>>t_comp>>pts;
+    cout<<"Name"<<setw(30)<<"Total Tasks"<<endl;
+    cout<<name<<setw(35)<<t_count<<endl<<endl<<endl;
+    
+    cout<<"Tasks Completed"<<setw(30)<<"Points"<<endl;
+    cout<<t_comp<<setw(35)<<pts<<endl;
+    
+    prof.close();
+    }
+    
+    
+    
+    
+
+    
+    
+}
+
+
 int main()
 {   
     system("cls"); //to clear the output screen
     system("title Habilist"); //to display the name of the program at the top
     
-    
+    string name;
     cout<<"*********************** Welcome to the Habilist **********************     \n\n";
+    cout<<"Enter your name:\n";
+    cin>>name;    
     while(1){
+        
+    
     cout<<"Select your choice:\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.Exit\n";
+    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile \n 6.Exit\n";
     int ch;
     cin>>ch;
     
@@ -284,6 +355,8 @@ int main()
         case 3: delete_task();break;
         
         case 4: display_task();break;
+        
+        case 5: profile_(name);break;
         
         default: exit(0);
     }
