@@ -8,12 +8,17 @@
 #include <time.h>
 // #include <sqlite>
 
+
+#define underline "\33[4m"
+#define reset "\33[0m"
+
+
 using namespace std;
 
 int points=0;
 int task_count=0;
 int task_completed=0;
-// int task_failed=0;
+
 
 
 class Habit{
@@ -22,10 +27,7 @@ class Habit{
     int time_;
     
     public:
-    // Habit(){
-    //     task="";
-    //     time_=0;
-    // }
+
     void get_habit(string a,int t){
         task=a;
         time_=t;
@@ -45,11 +47,7 @@ class ToDo:public Habit{
     int time_;
     
     public:
-    // ToDo(){task="";time_=0;}
-    // ToDo(string a ,int t){
-    //     task=a;
-    //     time_=t;
-    // }
+
     void get_ToDo(string a,int t){
         task=a;
         time_=t;
@@ -66,7 +64,7 @@ class ToDo:public Habit{
 
 
 
-////////////////////////////////////// NEW TASK /////////////////////////////////////////////////////
+//////////////////////////////////////HABIT-NEW TASK /////////////////////////////////////////////////////
 
 void Habit::new_task(){
     Habit h1;
@@ -89,7 +87,7 @@ void Habit::new_task(){
 }
 
 
-////////////////////////////////////// INSERT TASK /////////////////////////////////////////////////////
+////////////////////////////////////// HABIT-INSERT TASK /////////////////////////////////////////////////////
 
 void Habit::insert(){  
     int s_no;
@@ -111,7 +109,7 @@ void Habit::insert(){
 }
 
 
-////////////////////////////////////// EDIT TASK /////////////////////////////////////////////////////
+////////////////////////////////////// HABIT-EDIT TASK /////////////////////////////////////////////////////
 
 void Habit::edit_task()
 {
@@ -173,14 +171,14 @@ void Habit::edit_task()
     }
     
     
-////////////////////////////////////// DISPLAY TASK /////////////////////////////////////////////////////
+////////////////////////////////////// HABIT-DISPLAY TASK /////////////////////////////////////////////////////
 
 void Habit::display_task(){
     int s_no;
     string task;
     int time;
     fstream habits;
-    cout<<"_______________________Your Current Tasks_______________________\n";
+    cout<<"_______________________ Your Current Habits _______________________\n";
     habits.open("habits.txt",ios::in); //read from file
     cout<<"S.no"<<setw(30)<<"Tasks"<<setw(30)<<"Deadline"<<endl<<endl;
     while(habits >>s_no >>task >>time){
@@ -190,7 +188,7 @@ void Habit::display_task(){
     cout<<endl;
 }
 
-////////////////////////////////////// DELETE TASK /////////////////////////////////////////////////////
+////////////////////////////////////// HABIT-DELETE TASK /////////////////////////////////////////////////////
 
 void Habit::delete_task()
 {
@@ -219,7 +217,7 @@ void Habit::delete_task()
         hour=hour+1;
         min=min%30;
     }
-    cout<<hour<<" "<<min<<endl;
+    // cout<<hour<<" "<<min<<endl;
     ifstream habits;
     habits.open("habits.txt",ios::in|ios::out); 
     cout<<"Enter the task no. you wish to delete:\n";
@@ -278,19 +276,19 @@ void Habit::delete_task()
 
 ////////////////////////////////////// PROFILE /////////////////////////////////////////////////////
 
-void profile_(string name){ //yet to work
+void profile_(string name){ 
    
     int t_count=0;
     int t_comp=0;
     int pts=0;
     int x=0;
     ofstream profile("profile.txt");
-    if(!profile){
+    if(!profile){ //if profile doesn't exist create profile and intialize with name and 0
         profile.open("profile.txt",ios::out);
         profile<<name<<" "<<t_count<<" "<<t_comp<<" "<<pts;
         profile.close();
     }
-    else{
+    else{ //if profile already exist update no.of tasks,tasks completed and points
     
     ifstream profile;
     profile.open("profile.txt",ios::in|ios::out);
@@ -312,11 +310,13 @@ void profile_(string name){ //yet to work
     fstream prof("profile.txt",ios::in);
     
     prof>>name>>t_count>>t_comp>>pts;
-    cout<<"Name"<<setw(30)<<"Total Tasks"<<endl;
-    cout<<name<<setw(35)<<t_count<<endl<<endl<<endl;
+    cout<<"\n\n--------------------------------PROFILE---------------------------------------------------\n\n";
+    cout<<setw(20)<<"Name"<<setw(30)<<"Total Tasks"<<endl;
+    cout<<setw(20)<<name<<setw(30)<<t_count<<endl<<endl<<endl;
     
-    cout<<"Tasks Completed"<<setw(30)<<"Points"<<endl;
-    cout<<t_comp<<setw(35)<<pts<<endl;
+    cout<<setw(20)<<"Tasks Completed"<<setw(30)<<"Points"<<endl;
+    cout<<setw(20)<<t_comp<<setw(30)<<pts<<endl;
+    cout<<"\n\n------------------------------------------------------------------------------------------\n\n";
     
     prof.close();
     }
@@ -324,13 +324,13 @@ void profile_(string name){ //yet to work
     
 }
 
-////////////////////////////////////// MENU /////////////////////////////////////////////////////
+////////////////////////////////////// HABIT-MENU /////////////////////////////////////////////////////
 
 void Habit::menu(string name)
 {
     Habit h1;
-    cout<<"Select your choice:\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile \n 6.Exit\n";
+    cout<<"\n\nSelect your choice:\n\n ";
+    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile\n 6.Exit\n";
     int ch2;
     cin>>ch2;
     
@@ -351,7 +351,7 @@ void Habit::menu(string name)
     }
 }
 
-
+////////////////////////////////////// TO-DO NEW TASK /////////////////////////////////////////////////////
 
 void ToDo::new_task(){
      ToDo t1;
@@ -367,11 +367,12 @@ void ToDo::new_task(){
     cin>>task;  
     cout<<"Enter the deadline in hours:\n";
     cin>>time_;
-    // ofstream habits("habits.txt");
     t1.get_ToDo(task,time_);
     t1.insert();
     
 }
+
+////////////////////////////////////// TO-DO EDIT TASK /////////////////////////////////////////////////////
 
 void ToDo::edit_task(){
     
@@ -392,7 +393,7 @@ void ToDo::edit_task(){
     ofstream temp; //temporary file to write the data of habits.txt excluding the line to be edited
     temp.open("temp.txt",ios::out);
     
-    while(to_do >> s_no >> task >>time) //read from habits.txt line by line
+    while(to_do >> s_no >> task >>time) //read from ToDo.txt line by line
     {
             
             if(id!=s_no){
@@ -434,6 +435,8 @@ void ToDo::edit_task(){
     
 }
 
+////////////////////////////////////// TO-DO INSERT /////////////////////////////////////////////////////
+
 void ToDo::insert(){
      int s_no;
     ifstream to_do("ToDo.txt");;
@@ -453,6 +456,8 @@ void ToDo::insert(){
 
     
 }
+
+////////////////////////////////////// TO-DO DELETE TASK /////////////////////////////////////////////////////
 
 void ToDo::delete_task(){
    
@@ -480,16 +485,16 @@ void ToDo::delete_task(){
         hour=hour+1;
         min=min%30;
     }
-    cout<<hour<<" "<<min<<endl;
+    // cout<<hour<<" "<<min<<endl;
     ifstream to_do;
     to_do.open("ToDo.txt",ios::in|ios::out); 
     cout<<"Enter the task no. you wish to delete:\n";
     cin>>id;
     
-    ofstream temp; //temporary file to write the data of habits.txt excluding the line to be edited
+    ofstream temp; //temporary file to write the data of ToDo.txt excluding the line to be edited
     temp.open("temp.txt",ios::out);
     
-    while(to_do >> s_no >> task >>time_) //read from habits.txt line by line
+    while(to_do >> s_no >> task >>time_) //read from ToDo.txt line by line
     {
             
             if(id!=s_no){
@@ -532,8 +537,8 @@ void ToDo::delete_task(){
         }
         temp.close();
         to_do.close();
-        remove("ToDo.txt"); //remove habits.txt
-        rename("temp.txt","ToDo.txt"); //rename temp.txt to habits.txt
+        remove("ToDo.txt"); //remove ToDo.txt
+        rename("temp.txt","ToDo.txt"); //rename temp.txt to ToDo.txt
     
     
 }
@@ -543,7 +548,7 @@ void ToDo::display_task(){
     string task;
     int time;
     fstream to_do;
-    cout<<"_______________________Your Current Tasks_______________________\n";
+    cout<<"_______________________Your Current To-Dos_______________________\n";
     to_do.open("ToDo.txt",ios::in); //read from file
     cout<<"S.no"<<setw(30)<<"Tasks"<<setw(30)<<"Deadline"<<endl<<endl;
     while(to_do >>s_no >>task >>time){
@@ -554,9 +559,11 @@ void ToDo::display_task(){
     
 }
 
+////////////////////////////////////// TO-DO MENU /////////////////////////////////////////////////////
+
 void ToDo::menu(string name){
     ToDo t1;
-    cout<<"Select your choice:\n ";
+    cout<<"\n\nSelect your choice:\n ";
     cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile \n 6.Exit\n";
     int ch2;
     cin>>ch2;
@@ -579,7 +586,7 @@ void ToDo::menu(string name){
     
 }
 
-
+////////////////////////////////////// MAIN /////////////////////////////////////////////////////
 
 int main()
 {   
@@ -588,24 +595,27 @@ int main()
     Habit hab;
     ToDo td;
     string name;
-    cout<<"*********************** Welcome to the Habilist **********************     \n\n";
+    cout<<"********************************* Welcome to the Habilist *********************************     \n\n";
     cout<<"Enter your name:\n";
     cin>>name;    
     
     while(1){
         
         
-    cout<<"Select the type of task:\n ";
-    cout<<"1.Habit\n 2.To-Do\n";
+    cout<<"\n\nSelect the type of task:\n ";
+    cout<<"1.Habit\n 2.To-Do\n 3.Exit\n";
     int ch;
     cin>>ch;
     switch(ch)
     {
-        case 1: hab.menu(name);break;
+        case 1: hab.menu(name);break;//Call habit menu
         
-        case 2: td.menu(name);break;
+        case 2: td.menu(name);break;//call to-do menu
         
-    }
+        case 3: exit(0);
+        
+        default:cout<<"Not a valid option\n";
+        }
     
  }
     return 0;
