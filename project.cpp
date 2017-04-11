@@ -18,6 +18,10 @@ using namespace std;
 int points=0;
 int task_count=0;
 int task_completed=0;
+int flag=0;
+int tcnt=0;
+int tcmp=0;
+int pt=0;
 
 
 
@@ -282,43 +286,50 @@ void profile_(string name){
     int t_comp=0;
     int pts=0;
     int x=0;
-    ofstream profile("profile.txt");
-    if(!profile){ //if profile doesn't exist create profile and intialize with name and 0
-        profile.open("profile.txt",ios::out);
-        profile<<name<<" "<<t_count<<" "<<t_comp<<" "<<pts;
-        profile.close();
+    
+    
+    fstream profile("profile.txt",ios::in|ios::out);
+    if(profile){
+        
+    
+    fstream prof("profile.txt",ios::in);
+    
+    if(flag==0)
+    {
+        prof>>name>>t_count>>t_comp>>pts;
+        tcnt=t_count;
+        tcmp=t_comp;
+        pt=pts;
+        flag=1;
     }
-    else{ //if profile already exist update no.of tasks,tasks completed and points
+    cout<<"\n\n--------------------------------PROFILE---------------------------------------------------\n\n";
+    cout<<setw(20)<<"Name"<<setw(30)<<"Total Tasks"<<endl;
+    cout<<setw(20)<<name<<setw(30)<<tcnt+task_count<<endl<<endl<<endl;
     
-    ifstream profile;
-    profile.open("profile.txt",ios::in|ios::out);
+    cout<<setw(20)<<"Tasks Completed"<<setw(30)<<"Points"<<endl;
+    cout<<setw(20)<<tcmp+task_completed<<setw(30)<<pt+points<<endl;
+    cout<<"\n\n------------------------------------------------------------------------------------------\n\n";
+    
+    prof.close();
+    
     ofstream temp("temp.txt",ios::out);
-    
-    profile>>name >>t_count >>t_comp >>pts ;
-    task_count+=t_count;
-    task_completed+=t_comp;
-    points+=pts;
 
-    temp<<name<<" "<<task_count<<" "<<task_completed<<" "<<points;    
+
+    temp<<name<<" "<<tcnt+task_count<<" "<<tcmp+task_completed<<" "<<pt+points;    
     profile.close();
     temp.close();
     
     remove("profile.txt");
     rename("temp.txt","profile.txt");
     
-    
-    fstream prof("profile.txt",ios::in);
-    
-    prof>>name>>t_count>>t_comp>>pts;
-    cout<<"\n\n--------------------------------PROFILE---------------------------------------------------\n\n";
-    cout<<setw(20)<<"Name"<<setw(30)<<"Total Tasks"<<endl;
-    cout<<setw(20)<<name<<setw(30)<<t_count<<endl<<endl<<endl;
-    
-    cout<<setw(20)<<"Tasks Completed"<<setw(30)<<"Points"<<endl;
-    cout<<setw(20)<<t_comp<<setw(30)<<pts<<endl;
-    cout<<"\n\n------------------------------------------------------------------------------------------\n\n";
-    
-    prof.close();
+        
+    }
+    else{
+        ofstream profile("profile.txt",ios::out);
+        cout<<"file doesn't exist\n";
+        profile<<name<<" "<<t_count<<" "<<t_comp<<" "<<pts;
+        profile.close();
+        
     }
     
     
@@ -330,9 +341,14 @@ void Habit::menu(string name)
 {
     Habit h1;
     cout<<"\n\nSelect your choice:\n\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile\n 6.Exit\n";
+    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.Exit\n";
     int ch2;
     cin>>ch2;
+    
+    int t_count=0;
+    int t_comp=0;
+    int pts=0;
+    int x=0;
     
     
     switch(ch2)
@@ -345,7 +361,10 @@ void Habit::menu(string name)
         
         case 4: h1.display_task();break;
         
-        case 5: profile_(name);break;
+        // case 5: profile_(name);break;
+        case 5: exit(0);
+       
+    
         
         default: exit(0);
     }
@@ -564,7 +583,7 @@ void ToDo::display_task(){
 void ToDo::menu(string name){
     ToDo t1;
     cout<<"\n\nSelect your choice:\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.View Your Profile \n 6.Exit\n";
+    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.Exit\n";
     int ch2;
     cin>>ch2;
     
@@ -579,7 +598,7 @@ void ToDo::menu(string name){
         
         case 4: t1.display_task();break;
         
-        case 5: profile_(name);break;
+        // case 5: profile_(name);break;
         
         default: exit(0);
     }
@@ -603,7 +622,7 @@ int main()
         
         
     cout<<"\n\nSelect the type of task:\n ";
-    cout<<"1.Habit\n 2.To-Do\n 3.Exit\n";
+    cout<<"1.Habit\n 2.To-Do\n 3.View Your Profile\n 4.Exit\n";
     int ch;
     cin>>ch;
     switch(ch)
@@ -612,7 +631,9 @@ int main()
         
         case 2: td.menu(name);break;//call to-do menu
         
-        case 3: exit(0);
+        case 3: profile_(name);break;//call profile
+        
+        case 4: exit(0);
         
         default:cout<<"Not a valid option\n";
         }
