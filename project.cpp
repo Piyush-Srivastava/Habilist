@@ -183,9 +183,9 @@ void Habit::display_task(){
     string task;
     int time;
     fstream habits;
-    cout<<"_______________________ Your Current Habits _______________________\n";
+    cout<<"_______________________ Your Current Habits _______________________\n\n";
     habits.open("habits.txt",ios::in); //read from file
-    cout<<"S.no"<<setw(30)<<"Tasks"<<setw(30)<<"Deadline"<<endl<<endl;
+     cout<<underline<<"S.no"<<reset<<setw(30)<<underline<<"Tasks"<<reset<<setw(30)<<underline<<"Deadline"<<reset<<endl<<endl;
     while(habits >>s_no >>task >>time){
         cout<<s_no<<setw(35)<<task<<setw(25)<<time<<":00"<<endl;
         
@@ -235,6 +235,7 @@ void Habit::delete_task()
           
             
             if(id==s_no){
+                flag=1;
             cout<<s_no<<' '<<task<<' '<<time_<<endl;
             cout<<"Is this the task you want to delete(y/n):\n";
             char ch;
@@ -243,13 +244,13 @@ void Habit::delete_task()
             {   
                if(time_>hour){
                    cout<<"\nBravo! You finished the task on time\n\n";
-                   points+=1000;
+                   points+=100;
                    task_completed+=1;
                    
                }
                else{
                    cout<<"\nOops! Looks like you coudn't finish the task on time\n\n";
-                   points-=200;
+                   points-=40;
                }
                
             }
@@ -347,7 +348,16 @@ void profile_(string name){
     cout<<setw(20)<<name<<setw(30)<<tcnt+task_count<<endl<<endl<<endl;
     
     cout<<setw(20)<<"Tasks Completed"<<setw(30)<<"Points"<<endl;
-    cout<<setw(20)<<tcmp+task_completed<<setw(30)<<pt+points<<endl;
+    cout<<setw(20)<<tcmp+task_completed<<setw(30)<<pt+points<<endl<<endl;
+    
+    if(pt+points<=1000)
+    cout<<setw(40)<<"Rank: Newbie"<<endl;
+    else if(pt+points>=1000 && pt+points<1500)
+    cout<<setw(40)<<"Rank: Rookie"<<endl;
+    else if(pt+points>=1500 && pt+points<2000)
+    cout<<setw(40)<<"Rank: Amateur"<<endl;
+    else 
+    cout<<setw(40)<<"Rank: Pro"<<endl;
     cout<<"\n\n------------------------------------------------------------------------------------------\n\n";
     
     prof.close();
@@ -380,8 +390,9 @@ void profile_(string name){
 void Habit::menu(string name)
 {
     Habit h1;
-    cout<<"\n\nSelect your choice:\n\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task(Mark as completed)\n 4.Remove a task from the list\n 5.Display all tasks\n 6.Exit\n";
+    cout<<"\n\n"<<setw(35)<<underline<<"Select your choice:"<<reset<<"\n\n ";
+    cout<<setw(50)<<"1.Enter a new task\n"<<setw(46)<<"2.Edit a task\n"<<setw(67)<<"3.Delete a task(Mark as completed)\n";
+    cout<<setw(62)<<" 4.Remove a task from the list\n"<<setw(52)<<" 5.Display all tasks\n"<<setw(39)<<" 6.Exit\n";
     int ch2;
     cin>>ch2;
     
@@ -534,7 +545,7 @@ void ToDo::delete_task(){
     int hour;
     int min;
 
-    // now = time(0);
+ 
     now_tm = localtime(&now);
     hour = now_tm->tm_hour+5; //to change time from gmt to ist , gmt+5.30=ist
     min = now_tm->tm_min;
@@ -546,7 +557,7 @@ void ToDo::delete_task(){
         hour=hour+1;
         min=min%30;
     }
-    // cout<<hour<<" "<<min<<endl;
+
     ifstream to_do;
     to_do.open("ToDo.txt",ios::in|ios::out); 
     cout<<"Enter the task no. you wish to delete:\n";
@@ -576,13 +587,13 @@ void ToDo::delete_task(){
             {   
                if(time_>hour){
                    cout<<"\nBravo! You finished the task on time\n\n";
-                   points+=1000;
+                   points+=100;
                    task_completed+=1;
                    
                }
                else{
                    cout<<"\nOops! Looks like you coudn't finish the task on time\n\n";
-                   points-=200;
+                   points-=40;
                }
                
             }
@@ -611,9 +622,9 @@ void ToDo::display_task(){
     string task;
     int time;
     fstream to_do;
-    cout<<"_______________________Your Current To-Dos_______________________\n";
+    cout<<"_______________________Your Current To-Dos_______________________\n\n";
     to_do.open("ToDo.txt",ios::in); //read from file
-    cout<<"S.no"<<setw(30)<<"Tasks"<<setw(30)<<"Deadline"<<endl<<endl;
+    cout<<underline<<"S.no"<<reset<<setw(30)<<underline<<"Tasks"<<reset<<setw(30)<<underline<<"Deadline"<<reset<<endl<<endl;
     while(to_do >>s_no >>task >>time){
         cout<<s_no<<setw(35)<<task<<setw(25)<<time<<":00"<<endl;
         
@@ -626,8 +637,9 @@ void ToDo::display_task(){
 
 void ToDo::menu(string name){
     ToDo t1;
-    cout<<"\n\nSelect your choice:\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.Exit\n";
+    cout<<"\n\n"<<setw(35)<<underline<<"Select your choice:"<<reset<<"\n\n ";
+    cout<<setw(50)<<"1.Enter a new task\n"<<setw(46)<<"2.Edit a task\n"<<setw(67)<<"3.Delete a task(Mark as completed)\n";
+    cout<<setw(52)<<" 5.Display all tasks\n"<<setw(39)<<" 6.Exit\n";
     int ch2;
     cin>>ch2;
     
@@ -653,8 +665,6 @@ void ToDo::menu(string name){
 
 int main()
 {   
-    system("cls"); //to clear the output screen
-    system("title Habilist"); //to display the name of the program at the top
     Habit hab;
     ToDo td;
     string name;
@@ -665,8 +675,8 @@ int main()
     while(1){
         
         
-    cout<<"\n\nSelect the type of task:\n ";
-    cout<<"1.Habit\n 2.To-Do\n 3.View Your Profile\n 4.Exit\n";
+    cout<<"\n\n"<<setw(35)<<underline<<"Select your choice:"<<reset<<"\n\n ";
+    cout<<setw(40)<<"1.Habit\n"<<setw(41)<<"2.To-Do\n"<<setw(53)<<"3.View Your Profile\n"<<setw(40)<<"4.Exit\n";
     int ch;
     cin>>ch;
     switch(ch)
