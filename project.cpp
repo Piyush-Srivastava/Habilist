@@ -43,6 +43,7 @@ class Habit{
     friend  void profile_(string);
     virtual void insert();
     virtual void menu(string);
+    void remove_task();
     
 };
 
@@ -209,7 +210,7 @@ void Habit::delete_task()
     int hour;
     int min;
 
-    // now = time(0);
+
     now_tm = localtime(&now);
     hour = now_tm->tm_hour+5; //to change time from gmt to ist , gmt+5.30=ist
     min = now_tm->tm_min;
@@ -221,28 +222,19 @@ void Habit::delete_task()
         hour=hour+1;
         min=min%30;
     }
-    // cout<<hour<<" "<<min<<endl;
+
     ifstream habits;
     habits.open("habits.txt",ios::in|ios::out); 
     cout<<"Enter the task no. you wish to delete:\n";
     cin>>id;
     
-    ofstream temp; //temporary file to write the data of habits.txt excluding the line to be edited
-    temp.open("temp.txt",ios::out);
-    
+  
     while(habits >> s_no >> task >>time_) //read from habits.txt line by line
     {
             
-            if(id!=s_no){
-                if(flag==0)
-                temp<< s_no<<' '<<task<<' '<<time_<<endl; //write the data to temp file
-                else
-                temp<< s_no-1<<' '<<task<<' '<<time_<<endl; //decrement the s.no by one, of the tasks
-                                                            //after the deleted task
-            }
+          
             
-            else if(id==s_no){
-                flag=1;
+            if(id==s_no){
             cout<<s_no<<' '<<task<<' '<<time_<<endl;
             cout<<"Is this the task you want to delete(y/n):\n";
             char ch;
@@ -271,13 +263,61 @@ void Habit::delete_task()
         {
             cout<<"Task not found\n";
         }
+
+        habits.close();
+
+    
+}
+
+////////////////////////////////////// HABIT-REMOVE TASK /////////////////////////////////////////////////////
+
+void Habit::remove_task()
+{
+    Habit h;
+    ToDo d;
+    int s_no;
+    int id;
+    int time_;
+    string task;
+    int flag=0;
+    
+
+    ifstream habits;
+    habits.open("habits.txt",ios::in|ios::out); 
+    cout<<"Enter the task no. you wish to delete:\n";
+    cin>>id;
+    
+    ofstream temp; //temporary file to write the data of habits.txt excluding the line to be edited
+    temp.open("temp.txt",ios::out);
+    
+    while(habits >> s_no >> task >>time_) //read from habits.txt line by line
+    {
+            
+            if(id!=s_no){
+                if(flag==0)
+                temp<< s_no<<' '<<task<<' '<<time_<<endl; //write the data to temp file
+                else
+                temp<< s_no-1<<' '<<task<<' '<<time_<<endl; //decrement the s.no by one, of the tasks
+                                                            //after the deleted task
+            }
+            else{
+                flag=1;
+                cout<<"Task has been successfully removed from the list\n";
+                }
+            
+
+    }
+        
+         if(flag==0) //id not found
+        {
+            cout<<"Task not found\n";
+        }
         temp.close();
         habits.close();
         remove("habits.txt"); //remove habits.txt
         rename("temp.txt","habits.txt"); //rename temp.txt to habits.txt
     
 }
-
 ////////////////////////////////////// PROFILE /////////////////////////////////////////////////////
 
 void profile_(string name){ 
@@ -326,7 +366,7 @@ void profile_(string name){
     }
     else{
         ofstream profile("profile.txt",ios::out);
-        cout<<"file doesn't exist\n";
+        cout<<"Profile doesn't exist.\n Enter a new task to create a profile\n";
         profile<<name<<" "<<t_count<<" "<<t_comp<<" "<<pts;
         profile.close();
         
@@ -341,7 +381,7 @@ void Habit::menu(string name)
 {
     Habit h1;
     cout<<"\n\nSelect your choice:\n\n ";
-    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task\n 4.Display all tasks\n 5.Exit\n";
+    cout<<"1.Enter a new task\n 2.Edit a task\n 3.Delete a task(Mark as completed)\n 4.Remove a task from the list\n 5.Display all tasks\n 6.Exit\n";
     int ch2;
     cin>>ch2;
     
@@ -359,10 +399,12 @@ void Habit::menu(string name)
         
         case 3: h1.delete_task();break;
         
-        case 4: h1.display_task();break;
+        case 4: h1.remove_task();break;
+        
+        case 5: h1.display_task();break;
         
         // case 5: profile_(name);break;
-        case 5: exit(0);
+        case 6: exit(0);
        
     
         
@@ -561,6 +603,8 @@ void ToDo::delete_task(){
     
     
 }
+
+////////////////////////////////////// TO-DO DISPLAY TASK /////////////////////////////////////////////////////
 
 void ToDo::display_task(){
     int s_no;
